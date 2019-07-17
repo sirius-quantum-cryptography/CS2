@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "CS2 Alice",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/__main__.py",
+            "args": ["alice"],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "CS2 Bob",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/__main__.py",
+            "args": ["bob"],
+            "console": "integratedTerminal"
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+numpy
+requests
+bitarray
+python-socketio
+eventlet
