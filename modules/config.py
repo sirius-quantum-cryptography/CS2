@@ -12,4 +12,4 @@ TEMP = HOME_PATH + "/temp.bin"
 LEN_NES = 640000
 POWER = 4
 LEN_SHUFFLE = 256
-REMOTE_HOST = getenv("remote_host", "localhost")
+REMOTE_HOST = getenv("cs2_remote_host", "localhost")
