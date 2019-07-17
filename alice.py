@@ -11,6 +11,7 @@ import socketio
 sio = socketio.Client()
 server = FileServer(64295)
 
+
 @sio.on("generate parity")
 def on_generate_parity(data):
     print("Generating parity... ", end="")
@@ -21,15 +22,16 @@ def on_generate_parity(data):
 
 @sio.on("send parity")
 def on_parity_requested(data):
-    print("Sending parity...")
+    print("Sending parity... ", end="")
     send(REMOTE_HOST, PARITY)
+    print("OK\nWaiting for a Bob... ", end="")
     sio.emit("parity sent")
 
 
 @sio.on("wipe badblocks")
 def on_wipe_badblocks(data):
     global LEN_NES
-    print("Wiping badblocks... ", end='')
+    print("OK\nWiping badblocks... ", end="")
     hamming_wipe(ALICE_KEY, TEMP, BAD_BLOCKS, POWER, len_nes=LEN_NES // 11)
     update_file(TEMP, ALICE_KEY)
     print("OK")
@@ -39,9 +41,10 @@ def on_wipe_badblocks(data):
 
 @sio.on("shuffle key")
 def on_shuffle_key(data):
-    print("Shuffling key...")
+    print("Shuffling key... ", end="")
     shuffle(ALICE_KEY, TEMP, LEN_SHUFFLE, 0)
     update_file(TEMP, ALICE_KEY)
+    print("OK")
     sio.emit("iteration ended")
 
 
@@ -64,7 +67,7 @@ def disconnect():
 def connect_to_bob():
     global sio, REMOTE_HOST
     sio.connect("http://%s:29083" % REMOTE_HOST)
-    REMOTE_HOST += ':64296'
+    REMOTE_HOST += ":64296"
     print("My sid is", sio.sid)
 
 

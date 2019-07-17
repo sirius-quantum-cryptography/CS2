@@ -1,5 +1,7 @@
 # Custom
 data_*/
+keys/
+recover_keys.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

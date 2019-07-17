@@ -18,6 +18,9 @@ class StoreHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"Error 404. Not Found.")
 
+    def log_message(self, format, *args):
+        return
+
     def do_GET(self):
         self.not_found()
 
@@ -37,7 +40,6 @@ class StoreHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "application/octet-stream")
             self.end_headers()
             self.wfile.write(b"OK")
-            print(f"Saved as {name}")
         else:
             self.not_found()
 

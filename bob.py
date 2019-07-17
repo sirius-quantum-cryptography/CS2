@@ -9,8 +9,8 @@ from modules.sender import send
 import eventlet, socketio, os
 
 server = FileServer(64296)
-REMOTE_HOST += ':64295'
-sio = socketio.Server()
+REMOTE_HOST += ":64295"
+sio = socketio.Server(logger=False)
 app = socketio.WSGIApp(sio)
 iteration = 0
 
@@ -34,15 +34,16 @@ def on_patrity_generated(sid):
 @sio.on("parity sent")
 def on_parity_received(sid):
     global LEN_NES
-    print('LN', LEN_NES)
     print("Parity received!")
-    print("Generating bad blocks...")
-    hamming_correct(BOB_KEY, PARITY, TEMP, BAD_BLOCKS, POWER, len_nes=LEN_NES // 11, drop_bad=True)
+    print("Generating bad blocks... ", end="")
+    hamming_correct(
+        BOB_KEY, PARITY, TEMP, BAD_BLOCKS, POWER, len_nes=LEN_NES // 11, drop_bad=True
+    )
     update_file(TEMP, BOB_KEY)
-    print("Shuffling key...")
+    print("OK\nShuffling key... ", end="")
     shuffle(BOB_KEY, TEMP, LEN_SHUFFLE, 0)
     update_file(TEMP, BOB_KEY)
-    print("Sending badblocks... ", end='')
+    print("OK\nSending badblocks... ", end="")
     send(REMOTE_HOST, BAD_BLOCKS)
     print("OK")
     LEN_NES = 0

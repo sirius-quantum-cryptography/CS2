@@ -75,7 +75,6 @@ def hamming_correct(
         else:
             ba_key.fromfile(file_in)
 
-    print(len(ba_key))
     ba_parity = bitarray()
     with open(fname_parity, "rb") as file_in:
         if len_nes_par:
@@ -156,7 +155,6 @@ def hamming_wipe(fname_in, fname_out, fname_bad, power, len_nes):
         bad_blocks = pickle.load(file_bad)
 
     temp = [True for i in range(len(ba_key))]
-    print(len(temp))
     for i in bad_blocks[::-1]:
         # print(i)
         for j in range(i * len_block_data, (i + 1) * len_block_data):
