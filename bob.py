@@ -10,7 +10,7 @@ import eventlet, socketio, os
 
 server = FileServer(64296)
 REMOTE_HOST += ":64295"
-sio = socketio.Server(logger=False)
+sio = socketio.Server(async_handlers=True)
 app = socketio.WSGIApp(sio)
 iteration = 0
 
@@ -28,7 +28,7 @@ def connect(sid, environ):
 @sio.on("parity generated")
 def on_patrity_generated(sid):
     print("Alice generated parity")
-    sio.emit("send parity", room=sid)
+    sio.emit("send parity")
 
 
 @sio.on("parity sent")
@@ -36,44 +36,50 @@ def on_parity_received(sid):
     global LEN_NES
     print("Parity received!")
     print("Generating bad blocks... ", end="")
-    hamming_correct(
-        BOB_KEY, PARITY, TEMP, BAD_BLOCKS, POWER, len_nes=LEN_NES // 11, drop_bad=True
-    )
-    update_file(TEMP, BOB_KEY)
-    print("OK\nShuffling key... ", end="")
-    shuffle(BOB_KEY, TEMP, LEN_SHUFFLE, 0)
-    update_file(TEMP, BOB_KEY)
-    print("OK\nSending badblocks... ", end="")
-    send(REMOTE_HOST, BAD_BLOCKS)
-    print("OK")
-    LEN_NES = 0
-    sio.emit("wipe badblocks", LEN_NES, room=sid)
+    def cringe():
+        global LEN_NES
+        hamming_correct(
+            BOB_KEY, PARITY, TEMP, BAD_BLOCKS, POWER, len_nes=LEN_NES // 11, drop_bad=True
+        )
+        update_file(TEMP, BOB_KEY)
+        print("OK\nShuffling key... ", end="")
+        shuffle(BOB_KEY, TEMP, LEN_SHUFFLE, 0)
+        update_file(TEMP, BOB_KEY)
+        print("OK\nSending badblocks... ", end="")
+        send(REMOTE_HOST, BAD_BLOCKS)
+        print("kOK")
+        LEN_NES = 0
+        sio.emit("wipe badblocks", LEN_NES)
+    Thread(target=cringe).start()
 
 
 @sio.on("blocks wiped")
 def on_blocks_wiped(sid):
     print("Blocks wiped")
-    sio.emit("shuffle key", room=sid)
+    sio.emit("shuffle key")
 
 
 @sio.on("iteration ended")
 def on_next_iteration(sid):
     global iteration
-    if iteration == 3:
+    print(f'*** THE ITERATION {iteration + 1} of {ITERATIONS} ***')
+    if iteration == ITERATIONS:
         print("Finished! Closing in 10 sec")
         sleep(10)
-        _exit()
+        _exit(0)
     print("Next iteration...")
     iteration += 1
-    sio.emit("generate parity", room=sid)
+    sio.emit("generate parity")
 
 
 @sio.on("hello")
 def hello(sid, data):
+    global iteration
     print(f"{sid}: {data}")
-    sio.emit("hello", "Hello, Alice!", room=sid)
+    sio.emit("hello", "Hello, Alice!")
     print("Alice is generating parity...")
-    sio.emit("generate parity", room=sid)
+    sio.emit("generate parity")
+    iteration += 1
 
 
 @sio.event

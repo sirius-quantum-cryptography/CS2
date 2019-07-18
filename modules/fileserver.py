@@ -31,8 +31,7 @@ class StoreHandler(BaseHTTPRequestHandler):
             data = self.rfile.read(int(length))
             fn = parse_qs(url.query)["filename"][0]
             name = join(
-                HOME_PATH,
-                "".join([x if x.isalnum() or x == "." else "_" for x in fn]),
+                HOME_PATH, "".join([x if x.isalnum() or x == "." else "_" for x in fn])
             )
             with open(name, "wb") as fh:
                 fh.write(data)

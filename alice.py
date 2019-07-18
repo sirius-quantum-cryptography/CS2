@@ -62,6 +62,8 @@ def connect():
 def disconnect():
     print("I'm disconnected! Exiting...")
     _exit(0)
+    sio.disconnect()
+    connect_to_bob()
 
 
 def connect_to_bob():

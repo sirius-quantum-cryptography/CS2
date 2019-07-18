@@ -3,7 +3,7 @@ import time as t
 import struct
 import pickle
 from bitarray import bitarray
-
+from time import sleep
 from modules.matrices import gen_matrix
 from modules.shuffle import gen_shuffle
 
@@ -21,6 +21,7 @@ def hamming_parity(fname_in, fname_out, power, len_nes=0):
         else:
             ba_key.fromfile(file_in)
 
+    len_nes = len(ba_key)
     ba_parity = bitarray()
     len_block_data = 2 ** power - 1 - power
 
@@ -65,6 +66,8 @@ def hamming_correct(
     len_nes_par=0,
     drop_bad=False,
 ):
+
+    print("LEN_NES", len_nes)
     syn_m = gen_matrix(power)[1]
     len_block_data = 2 ** power - 1 - power
 
@@ -74,6 +77,8 @@ def hamming_correct(
             ba_key.fromfile(file_in, len_nes * len_block_data // 8)
         else:
             ba_key.fromfile(file_in)
+
+    print("LEN_ACT", len(ba_key))
 
     ba_parity = bitarray()
     with open(fname_parity, "rb") as file_in:
@@ -93,9 +98,17 @@ def hamming_correct(
         if debug:
             print(block_data, block_parity)
         block_merged = [-1 for i in range(2 ** power)]
+        end = False
         for j in range(power + 1):
             # if power == 4: print(i, len(block_merged), block_merged, j, 2 ** j - 1)
-            block_merged[2 ** j - 1] = int(block_parity[j])
+            try:
+                block_merged[2 ** j - 1] = int(block_parity[j])
+            except:
+                print("Cringe!", block_parity)
+                end = True
+                break
+        if end:
+            break
         for j in range(len(block_merged)):
             if len(block_data):
                 if block_merged[j] == -1:
