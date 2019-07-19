@@ -66,8 +66,8 @@ def hamming_correct(
     len_nes_par=0,
     drop_bad=False,
 ):
-
-    print("LEN_NES", len_nes)
+    if debug:
+        print("LEN_NES", len_nes)
     syn_m = gen_matrix(power)[1]
     len_block_data = 2 ** power - 1 - power
 
@@ -78,7 +78,8 @@ def hamming_correct(
         else:
             ba_key.fromfile(file_in)
 
-    print("LEN_ACT", len(ba_key))
+    if debug:
+        print("LEN_ACT", len(ba_key))
 
     ba_parity = bitarray()
     with open(fname_parity, "rb") as file_in:
@@ -104,7 +105,8 @@ def hamming_correct(
             try:
                 block_merged[2 ** j - 1] = int(block_parity[j])
             except:
-                print("Cringe!", block_parity)
+                if debug:
+                    print("Cringe!", block_parity)
                 end = True
                 break
         if end:

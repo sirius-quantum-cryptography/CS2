@@ -9,8 +9,8 @@ BOB_KEY = HOME_PATH + "/bob.bin"
 PARITY = HOME_PATH + "/parity.bin"
 BAD_BLOCKS = HOME_PATH + "/bad.bin"
 TEMP = HOME_PATH + "/temp.bin"
-LEN_NES = 6400000
+LEN_NES = 64000
 POWER = 4
 ITERATIONS = 3
 LEN_SHUFFLE = 1024
-REMOTE_HOST = getenv("cs2_remote_host", "localhost")
+REMOTE_HOST = getenv("cs2_remote_host", "localhost:" + str(64295 if mode == 'bob' else 64296))

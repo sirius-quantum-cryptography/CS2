@@ -1,28 +1,49 @@
-from os import curdir, mkdir
+from os import curdir, mkdir, _exit
 from os.path import join, isdir
+from threading import Thread
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 from modules.config import HOME_PATH
-import asyncio
 
 
 class StoreHandler(BaseHTTPRequestHandler):
     route = "/upload"
+    emitter = None
+    debug = False
+
     if not isdir(HOME_PATH):
         print("Storage directory not exists! Creating...")
         mkdir(HOME_PATH)
+
+    def accepted(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+        self.wfile.write(b"Accepted")
 
     def not_found(self):
         self.send_response(404)
         self.send_header("Content-Type", "text/plain")
         self.end_headers()
         self.wfile.write(b"Error 404. Not Found.")
+        self.wfile.close()
 
     def log_message(self, format, *args):
-        return
+        if self.debug:
+            return super().log_message(format, *args)
 
     def do_GET(self):
-        self.not_found()
+        url = urlparse(self.path)
+        if url.path == "/emit" and self.emitter:
+            qs = parse_qs(url.query)
+            self.accepted()
+            def payload():
+                self.emitter.emit(qs["event"][0], qs["args"][0] if "args" in qs else None)
+            Thread(target=payload).start()
+        elif url.path == "/exit":
+            _exit(0xee)
+        else:
+            self.not_found()
 
     def do_POST(self):
         url = urlparse(self.path)
@@ -43,11 +64,16 @@ class StoreHandler(BaseHTTPRequestHandler):
             self.not_found()
 
 
-class FileServer:
+class NetIO:
     server = HTTPServer
+    emitter = None
+    handler = StoreHandler
 
     def __init__(self, port):
-        self.server = HTTPServer(("", port), StoreHandler)
+        self.server = HTTPServer(("", port), self.handler)
+
+    def set_emitter(self, emitter):
+        self.handler.emitter = emitter
 
     def start(self):
         self.server.serve_forever()
