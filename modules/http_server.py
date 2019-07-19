@@ -1,8 +1,11 @@
+__author__ = "mashed-potatoes"
+
 from os import curdir, mkdir, _exit
 from os.path import join, isdir
 from threading import Thread
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
+from pymitter import EventEmitter
 from modules.config import HOME_PATH
 
 
@@ -10,10 +13,6 @@ class StoreHandler(BaseHTTPRequestHandler):
     route = "/upload"
     emitter = None
     debug = False
-
-    if not isdir(HOME_PATH):
-        print("Storage directory not exists! Creating...")
-        mkdir(HOME_PATH)
 
     def accepted(self):
         self.send_response(200)
@@ -73,11 +72,13 @@ class NetIO:
     emitter = None
     handler = StoreHandler
 
-    def __init__(self, port):
+    def __init__(self, port: int) -> NetIO:
         self.server = HTTPServer(("", port), self.handler)
+        if not isdir(HOME_PATH):
+            mkdir(HOME_PATH)
 
-    def set_emitter(self, emitter):
+    def set_emitter(self, emitter: EventEmitter) -> None:
         self.handler.emitter = emitter
 
-    def start(self):
+    def start(self) -> None:
         self.server.serve_forever()

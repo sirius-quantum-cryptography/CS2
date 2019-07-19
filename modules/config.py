@@ -1,3 +1,5 @@
+__author__ = "mashed-potatoes"
+
 from os import getenv
 from sys import argv
 

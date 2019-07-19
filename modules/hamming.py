@@ -1,3 +1,5 @@
+__author__ = "AfoninZ"
+
 import numpy as np
 import time as t
 import struct

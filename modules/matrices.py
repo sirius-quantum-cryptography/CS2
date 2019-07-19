@@ -1,5 +1,6 @@
-import numpy as np
+__author__ = "nikikust"
 
+import numpy as np
 
 def gen_matrix(
     num_params, only_syn_matrix=0, no_data=1

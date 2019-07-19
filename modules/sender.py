@@ -1,5 +1,9 @@
+__author__ = "mashed-potatoes"
+
 import requests
 from os import _exit
+from typing import Union
+from modules.logger import Logger
 
 
 class RemoteHost:
@@ -7,11 +11,11 @@ class RemoteHost:
     debug = False
     logger = None
 
-    def __init__(self, address, logger):
+    def __init__(self, address: str, logger: Logger) -> RemoteHost:
         self.address += "http://" + address
         self.logger = logger
 
-    def send_file(self, path):
+    def send_file(self, path: str) -> Union[str, None]:
         try:
             with open(path, "rb") as content:
                 res = requests.post(
@@ -23,13 +27,13 @@ class RemoteHost:
         except Exception as e:
             self.logger.fail()
             self.logger.info(e.args[0])
-            _exit(0xee)
+            _exit(0xEE)
 
-    def emit(self, event, args=0):
+    def emit(self, event: str, args=0) -> Union[str, None]:
         try:
             res = requests.get(f"{self.address}/emit?event={event}&args={args}")
             return res.text
         except Exception as e:
             self.logger.fail()
             self.logger.info(e.args[0])
-            _exit(0xee)
+            _exit(0xEE)

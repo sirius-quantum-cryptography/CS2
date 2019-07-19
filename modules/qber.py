@@ -1,3 +1,5 @@
+__author__ = "AfoninZ"
+
 def calc(file_alice, file_bob):
     ba_alice = bitarray()
     with open(file_alice, "rb") as filek_in:

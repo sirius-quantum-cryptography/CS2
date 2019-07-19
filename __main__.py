@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+__author__ = "mashed-potatoes"
+
 from os import getenv
 from sys import argv
 

@@ -1,3 +1,5 @@
+__author__ = "nikikust"
+
 from math import sqrt
 
 

@@ -1,3 +1,5 @@
+__author__ = "mashed-potatoes"
+
 from threading import Thread
 from os import _exit
 from modules.config import *
