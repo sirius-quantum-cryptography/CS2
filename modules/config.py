@@ -13,4 +13,6 @@ LEN_NES = 64000
 POWER = 4
 ITERATIONS = 3
 LEN_SHUFFLE = 1024
-REMOTE_HOST = getenv("cs2_remote_host", "localhost:" + str(64295 if mode == 'bob' else 64296))
+REMOTE_HOST = getenv(
+    "cs2_remote_host", "localhost:" + str(64295 if mode == "bob" else 64296)
+)

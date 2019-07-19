@@ -1,26 +1,35 @@
 import requests
+from os import _exit
+
 
 class RemoteHost:
-    address = ''
+    address = ""
     debug = False
+    logger = None
 
-    def __init__(self, address):
-        self.address += 'http://' + address
+    def __init__(self, address, logger):
+        self.address += "http://" + address
+        self.logger = logger
 
     def send_file(self, path):
-        with open(path, "rb") as content:
-            res = requests.post(
-                url=f"{self.address}/upload?filename={path.split('/')[-1]}",
-                headers={"Content-Type": "application/octet-stream"},
-                data=content.read()
-            )
-            return res.text
+        try:
+            with open(path, "rb") as content:
+                res = requests.post(
+                    url=f"{self.address}/upload?filename={path.split('/')[-1]}",
+                    headers={"Content-Type": "application/octet-stream"},
+                    data=content.read(),
+                )
+                return res.text
+        except Exception as e:
+            self.logger.fail()
+            self.logger.info(e.args[0])
+            _exit(0xee)
 
     def emit(self, event, args=0):
-        url = f"{self.address}/emit?event={event}&args={args}"
-        if self.debug:
-            print(f'Connecting to {url}...')
-        res = requests.get(url)
-        if self.debug:
-            print('Request finished, is ok:', res.ok)
-        return res.text
+        try:
+            res = requests.get(f"{self.address}/emit?event={event}&args={args}")
+            return res.text
+        except Exception as e:
+            self.logger.fail()
+            self.logger.info(e.args[0])
+            _exit(0xee)

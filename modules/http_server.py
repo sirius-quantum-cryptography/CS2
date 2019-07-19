@@ -37,11 +37,15 @@ class StoreHandler(BaseHTTPRequestHandler):
         if url.path == "/emit" and self.emitter:
             qs = parse_qs(url.query)
             self.accepted()
+
             def payload():
-                self.emitter.emit(qs["event"][0], qs["args"][0] if "args" in qs else None)
+                self.emitter.emit(
+                    qs["event"][0], qs["args"][0] if "args" in qs else None
+                )
+
             Thread(target=payload).start()
         elif url.path == "/exit":
-            _exit(0xee)
+            _exit(0xEE)
         else:
             self.not_found()
 
