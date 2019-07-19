@@ -26,18 +26,17 @@ python __main__.py alice
 ```
 64295 - Alice's file server
 64296 - Bob's file server
-29083 - Bob's socket server
 ```
 
 ## Algorithm
 ```
-Alice: connect to Bob's socket server
+Alice: connect to Bob
 Alice: generate parity
 Alice: send parity to Bob
 Bob: get parity
 Bob: generate badblocks
 Bob: shuffle key
-Bob: send badblocks
+Bob: send badblocks to Alice
 Alice: get badblocks
 Alice: wipe badblocks
 Alice: shuffle key
