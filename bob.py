@@ -71,9 +71,10 @@ def on_next_iteration(sid):
 @ee.on("message")
 def message(args):
     global iteration
-    l.info(f"New message from remote host: {args}")
-    l.proc("Generating parity")
-    rh.emit("generate parity")
+    if 'Hello' in args:
+        l.info(f"Connected to Alice")
+        l.proc("Generating parity")
+        rh.emit("generate parity")
     iteration += 1
 
 

@@ -16,7 +16,7 @@ def calc_ber(logger, file_alice='./data_alice/alice.bin', file_bob='./data_bob/b
 
     for i in range(len_nes):
         if i % 102400 == 0:
-            logger.proc("Calculating BER", points=min(4, int(i / len_nes * 5)))
+            logger.proc("Calculating BER", points=int(i / len_nes * 4))
         errs += ba_alice[i] ^ ba_bob[i]
     logger.ok()
     logger.info(f"Errors: {errs} in {len_nes}")

@@ -207,6 +207,7 @@ def shuffle(fname_in, fname_out, len_block, len_nes):
         )
         # print(f'Shuffled #{i}!')
 
+    ba_in = ba_in[:len(ba_in) - len(ba_in) % len_block]
     with open(fname_out, "wb") as file_out:
         ba_in.tofile(file_out)
 
