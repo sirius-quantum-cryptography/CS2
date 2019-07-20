@@ -3,11 +3,11 @@ __author__ = "mashed-potatoes"
 class Logger:
     active = False
 
-    def proc(self, message: str) -> None:
-        if self.active:
+    def proc(self, message: str, points=4) -> None:
+        if self.active and points == 4:
             self.ok()
         self.active = True
-        print(f"[....] {message}", end="\r")
+        print(f"[{'.' * points}{' ' * (4 - points)}] {message}", end="\r")
 
     def info(self, message: str) -> None:
         print(f"[\033[94mINFO\033[0m] {message}")

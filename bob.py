@@ -8,6 +8,7 @@ from modules.iohelper import update_file
 from modules.sender import RemoteHost
 from modules.http_server import NetIO
 from modules.logger import Logger
+from modules.qber import calc_ber
 from pymitter import EventEmitter
 
 ee = EventEmitter()
@@ -56,11 +57,13 @@ def on_next_iteration(sid):
     global iteration
     if iteration == ITERATIONS:
         l.info("Task finished!")
+        calc_ber(l)
         l.proc("Terminating Alice")
         rh.emit("exit")
         l.ok()
         _exit(0)
     l.info(f"*** THE ITERATION {iteration + 1} of {ITERATIONS} ***")
+    calc_ber(l)
     iteration += 1
     rh.emit("generate parity")
 
@@ -69,7 +72,7 @@ def on_next_iteration(sid):
 def message(args):
     global iteration
     l.info(f"New message from remote host: {args}")
-    l.proc("Alice is generating parity")
+    l.proc("Generating parity")
     rh.emit("generate parity")
     iteration += 1
 

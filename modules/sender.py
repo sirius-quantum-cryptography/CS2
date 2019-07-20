@@ -11,7 +11,7 @@ class RemoteHost:
     debug = False
     logger = None
 
-    def __init__(self, address: str, logger: Logger) -> RemoteHost:
+    def __init__(self, address: str, logger: Logger):
         self.address += "http://" + address
         self.logger = logger
 

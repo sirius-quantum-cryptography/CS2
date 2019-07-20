@@ -62,7 +62,7 @@ def message(args):
 @ee.on("exit")
 def exit(args):
     def payload():
-        l.warn("Terminating by remote command...")
+        l.warn("Terminating by remote command")
         sleep(1)
         _exit(0)
 

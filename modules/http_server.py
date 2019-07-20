@@ -14,24 +14,24 @@ class StoreHandler(BaseHTTPRequestHandler):
     emitter = None
     debug = False
 
-    def accepted(self):
+    def accepted(self) -> None:
         self.send_response(200)
         self.send_header("Content-Type", "text/plain")
         self.end_headers()
         self.wfile.write(b"Accepted")
 
-    def not_found(self):
+    def not_found(self) -> None:
         self.send_response(404)
         self.send_header("Content-Type", "text/plain")
         self.end_headers()
         self.wfile.write(b"Error 404. Not Found.")
         self.wfile.close()
 
-    def log_message(self, format, *args):
+    def log_message(self, format, *args) -> None:
         if self.debug:
             return super().log_message(format, *args)
 
-    def do_GET(self):
+    def do_GET(self) -> None:
         url = urlparse(self.path)
         if url.path == "/emit" and self.emitter:
             qs = parse_qs(url.query)
@@ -48,7 +48,7 @@ class StoreHandler(BaseHTTPRequestHandler):
         else:
             self.not_found()
 
-    def do_POST(self):
+    def do_POST(self) -> None:
         url = urlparse(self.path)
         if url.path == self.route:
             length = self.headers["Content-Length"]
@@ -72,7 +72,7 @@ class NetIO:
     emitter = None
     handler = StoreHandler
 
-    def __init__(self, port: int) -> NetIO:
+    def __init__(self, port: int):
         self.server = HTTPServer(("", port), self.handler)
         if not isdir(HOME_PATH):
             mkdir(HOME_PATH)
